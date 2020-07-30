@@ -32,3 +32,33 @@ func lengthOfLongestSubstring(s string) int {
 	}
 	return res
 }
+
+// 解法2：dp
+// dp[i]定义为以第i个字符结尾的不包含重复字符的子字符串的最大长度
+func dpApproch(s string) int {
+	if len(s) == 0 || len(s) == 1 {
+		return len(s)
+	}
+	dp := make([]int, len(s))
+	dp[0] = 1
+	max := 1
+	m := make(map[byte]int)
+	m[s[0]] = 0
+	for i := 1; i < len(s); i++ {
+		if idx, ok := m[s[i]]; !ok {
+			dp[i] = dp[i-1] + 1
+		} else {
+			if i-idx <= dp[i-1] {
+				dp[i] = i - idx
+			} else {
+				dp[i] = dp[i-1] + 1
+			}
+		}
+		if dp[i] > max {
+			max = dp[i]
+		}
+		m[s[i]] = i
+	}
+
+	return max
+}
